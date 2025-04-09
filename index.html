@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Predicción de Transporte</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        body { font-family: Arial; padding: 20px; text-align: center; }
+        button { background: #0088cc; color: white; border: none; padding: 10px 20px; }
+    </style>
+</head>
+<body>
+    <h1>🚍 Predictor de Afluencia</h1>
+    <p>¡Interfaz en desarrollo!</p>
+    <button onclick="alert('Botón funcional')">Probar</button>
+
+    <script>
+        // Conectar con Telegram
+        const tg = window.Telegram.WebApp;
+        tg.expand(); // Maximiza la ventana
+        console.log("Usuario de Telegram:", tg.initDataUnsafe.user);
+    </script>
+</body>
+</html>
