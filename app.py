@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
+import pickle
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.preprocessing import LabelEncoder
 
@@ -26,7 +27,7 @@ data = {
 df = pd.DataFrame(data)
 
 # ----------------------
-# Asignar afluencia
+# Asignar afluencia según reglas
 # ----------------------
 def asignar_afluencia(row):
     if row["hora"] in ["6:00", "7:00", "8:00", "16:00", "18:00"] and row["dia"] in dias[:5]:
@@ -41,16 +42,18 @@ def asignar_afluencia(row):
 df["afluencia"] = df.apply(asignar_afluencia, axis=1)
 
 # ----------------------
-# Codificación
+# Codificar variables categóricas
 # ----------------------
 encoders = {}
-for col in df.columns[:-1]:
+for col in df.columns[:-1]:  # todas menos 'afluencia'
     le = LabelEncoder()
     df[col] = le.fit_transform(df[col])
     encoders[col] = le
 
+# Codificar afluencia (target)
 le_afluencia = LabelEncoder()
 y = le_afluencia.fit_transform(df["afluencia"])
+
 X = df.drop("afluencia", axis=1)
 
 # Entrenar modelo
@@ -58,18 +61,18 @@ model = RandomForestClassifier()
 model.fit(X, y)
 
 # ----------------------
-# Interfaz Streamlit
+# Interfaz con Streamlit
 # ----------------------
-st.set_page_config(page_title="Afluencia TransMilenio", layout="centered")
-st.title("🚍 Predicción de Afluencia en TransMilenio")
+st.title("🔍 Predicción de Afluencia en TransMilenio")
 
-estacion = st.selectbox("Estación", estaciones)
-hora = st.selectbox("Hora", horas)
-dia = st.selectbox("Día de la semana", dias)
-clima = st.selectbox("Clima", climas)
-evento = st.radio("¿Hay evento cercano?", eventos)
+estacion = st.selectbox("🚏 Estación", estaciones)
+hora = st.selectbox("🕒 Hora del día", horas)
+dia = st.selectbox("📅 Día de la semana", dias)
+clima = st.selectbox("🌤️ Clima", climas)
+evento = st.radio("🎤 ¿Hay evento cercano?", eventos)
 
 if st.button("Predecir afluencia"):
+    # Preprocesar inputs
     input_data = pd.DataFrame({
         "estacion": [encoders["estacion"].transform([estacion])[0]],
         "hora": [encoders["hora"].transform([hora])[0]],
@@ -78,6 +81,9 @@ if st.button("Predecir afluencia"):
         "evento_cercano": [encoders["evento_cercano"].transform([evento])[0]]
     })
 
+    # Predecir
     pred = model.predict(input_data)
     resultado = le_afluencia.inverse_transform(pred)[0]
-    st.success(f"La afluencia esperada es: **{resultado}**")
+
+    # Mostrar resultado
+    st.success(f"📈 La afluencia esperada es: **{resultado}**")
