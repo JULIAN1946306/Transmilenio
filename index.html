@@ -3,23 +3,64 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Predicción de Transporte</title>
+    <title>Predictor de Afluencia</title>
+    <!-- SDK de Telegram (IMPORTANTE) -->
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
-        body { font-family: Arial; padding: 20px; text-align: center; }
-        button { background: #0088cc; color: white; border: none; padding: 10px 20px; }
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        h1 {
+            color: #0088cc;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        button {
+            background-color: #0088cc;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
     </style>
 </head>
 <body>
-    <h1>🚍 Predictor de Afluencia</h1>
-    <p>¡Interfaz en desarrollo!</p>
-    <button onclick="alert('Botón funcional')">Probar</button>
+    <div class="container">
+        <h1>Predictor de Afluencia</h1>
+        <p>¡Interfaz en desarrollo!</p>
+        
+        <!-- Botón de ejemplo que interactúa con Telegram -->
+        <button onclick="sendToTelegram()">Obtener Predicción</button>
+    </div>
 
     <script>
-        // Conectar con Telegram
+        // Inicializa la Web App de Telegram
         const tg = window.Telegram.WebApp;
         tg.expand(); // Maximiza la ventana
-        console.log("Usuario de Telegram:", tg.initDataUnsafe.user);
+        
+        function sendToTelegram() {
+            // Datos de ejemplo que enviarás al bot
+            const predictionData = {
+                action: "get_prediction",
+                linea: "L1",
+                hora: "8:00 AM"
+            };
+            
+            // Envía datos al bot y cierra la Web App
+            tg.sendData(JSON.stringify(predictionData));
+            tg.close();
+        }
     </script>
 </body>
 </html>
